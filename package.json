@@ -7,9 +7,5 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/incarnateTheGreat/lcboSearchApp.git"
-  },
-  "scripts": {
-    "start": "",
-    "test": ""
-  },
+  }
 }
