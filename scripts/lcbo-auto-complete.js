@@ -376,5 +376,5 @@ document.addEventListener('DOMContentLoaded', () => {
       this.createInstance();
     };
 
-    let acw = new lcboAutoCompleteObject();
+    const acw = new lcboAutoCompleteObject();
 });
