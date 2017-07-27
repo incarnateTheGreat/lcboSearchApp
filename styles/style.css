@@ -1,0 +1,136 @@
+body {
+  font-family: sans-serif;
+}
+h1 {
+  margin: 0 0 15px;
+  color: #444;
+  border-bottom: 1px solid #CCC;
+
+  display: none;
+}
+.container {
+  padding: 5px;
+}
+.loader {
+	position: fixed;
+	top: 46%;
+	left: 46%;
+	border: 16px solid #f3f3f3;
+	border-radius: 50%;
+	border-top: 16px solid #3498db;
+	width: 120px;
+	height: 120px;
+	animation: spin 1s linear infinite;
+	transition: all 0.35s ease;
+	opacity: 0;
+	z-index: 100;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg) }
+  100% { transform: rotate(360deg) }
+}
+
+/* LCBO AutoComplete */
+.autoCompleteWidget {
+  overflow: hidden;
+}
+table {
+  width: 100%;
+  margin: 10px 0 0;
+}
+table th {
+  text-align: left;
+  font-size: 24px;
+  padding: 0 0 2px 0;
+  font-weight: bold;
+}
+table th.pagination {
+  text-align: right;
+}
+table th.pagination button {
+  padding: 5px 10px;
+  margin: 0 5px 0 0;
+  border: 1px solid;
+  background: none;
+  cursor: pointer;
+  text-decoration: none;
+}
+table th.pagination button:hover,
+table th.pagination button.selectedPage {
+  background: #DDD;
+}
+table tr:nth-child(even) {
+  background: #DDD;
+}
+table tr:nth-child(odd) {
+  background: #FFF;
+}
+table tr td {
+  padding: 5px 10px;
+  width: 80%;
+}
+table tr td.quantity {
+  text-align: right;
+}
+input[type='search'] {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  border-bottom: 2px solid black;
+  font-size: 28px;
+}
+ul {
+  position: absolute;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  z-index: 200;
+}
+ul li {
+  padding: 5px;
+  border: 1px solid #EEE;
+  background: #F9F9F9;
+  width: 300px;
+  cursor: pointer;
+  -webkit-transition-duration: 0.1s;
+  -moz-transition-duration: 0.1s;
+  -o-transition-duration: 0.1s;
+  transition-duration: 0.1s;
+}
+ul li:hover, ul li:focus {
+  background: #CCC;
+}
+img {
+  text-align: center;
+  width: 60%;
+}
+.acw_left, .acw_right {
+  float: left;
+  opacity: 0;
+  -webkit-transition-duration: 0.4s;
+  -moz-transition-duration: 0.3s;
+  -o-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+}
+@media (max-width: 960px) {
+  .acw_left, .acw_right {
+    float: none;
+  }
+  .acw_left {
+    width: 50%;
+    margin: 0 auto;
+    text-align: center;
+  }
+}
+@media (min-width: 960px) and (max-width: 1900px) {
+  .acw_left {
+    width: 20%;
+  }
+  .acw_right {
+    width: 80%;
+  }
+  img {
+    width: 100%;
+  }
+}
