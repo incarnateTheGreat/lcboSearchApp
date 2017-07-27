@@ -1,0 +1,11 @@
+{
+  "name": "lcboSearchApp",
+  "version": "1.0.0",
+  "description": "Search for LCBO Products",
+  "author": "",
+  "main": "lcbo-auto-complete.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/incarnateTheGreat/lcboSearchApp.git"
+  }
+}
