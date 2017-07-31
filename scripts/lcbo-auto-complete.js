@@ -1,13 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
     function lcboAutoCompleteObject() {
+      this.acwObject = null;
+      this.searchInput = null;
       this.autoCompleteResults = null;
       this.currentSelectedProduct = null;
       this.access_key = 'MDoxMGZmNGI2OC0xOTgwLTExZTctODIzYS1hZjBjOTQxMDg5ZTQ6UDY3T3hsM2NUdlpSOHpoYzJUVlFrODZOUG9obUI5N1NxV2Rp';
       this.selectedAlcoholObject = null;
       this.globalTimeout = null;
+      this.loader = document.getElementsByClassName('loader')[0];
 
       this.createInstance = () => {
-        const acw = document.querySelectorAll('.autoCompleteWidget');
+        const acw = document.getElementsByClassName('autoCompleteWidget');
 
         //Instantiate the ACW (AutoComplete Widget) if the DOM does not have an ID associated to it.
         for(let i = 0; i < acw.length; i++) {
@@ -18,10 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
       this.buildHTMLElements = (elemID) => {
+        //Establish AutoCompleteWidget Object for this instance.
+        this.acwObject = document.getElementById(elemID);
+
         //Find 'autoCompleteWidget' in DOM to append to.
-        const ID = '#' + elemID + ' ',
-              autoCompleteWidget = document.querySelector(ID),
-              inputAttributes = {
+        const inputAttributes = {
                 'type': 'search',
                 'name': 'lcboAutoComplete',
                 'class': 'lcboAutoCompleteInput',
@@ -30,22 +34,22 @@ document.addEventListener('DOMContentLoaded', () => {
               }
 
         //Add 'alcoholDisplay' table to the DOM.
-        autoCompleteWidget.appendChild(document.createElement('input'));
+        this.acwObject.appendChild(document.createElement('input'));
 
         //Create Input element, then assign attributes.
-        const searchInput = document.querySelector(ID + 'input');
+        this.searchInput = this.acwObject.getElementsByTagName('input')[0];
 
         for(let key in inputAttributes) {
-          searchInput.setAttribute(key, inputAttributes[key]);
+          this.searchInput.setAttribute(key, inputAttributes[key]);
         }
 
         //Set On-Focus/On-Blur events to handle Placeholder text.
-        searchInput.onfocus = function() { this.placeholder = '' }
-        searchInput.onblur = function() { this.placeholder = 'Start typing to search for LCBO Alcohol' }
+        this.searchInput.onfocus = function() { this.placeholder = '' }
+        this.searchInput.onblur = function() { this.placeholder = 'Start typing to search for LCBO Alcohol' }
 
         //Create Unordered List for AutoComplete, then assign attributes.
-        autoCompleteWidget.appendChild(document.createElement('ul'));
-        document.querySelector(ID + ' ul').setAttribute('class', 'lcboAutoComplete');
+        this.acwObject.appendChild(document.createElement('ul'));
+        this.acwObject.getElementsByTagName('ul')[0].setAttribute('class', 'lcboAutoComplete');
 
         //Create left and right containers
         let leftContainer = document.createElement('div'),
@@ -54,8 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
         leftContainer.className = 'acw_left';
         rightContainer.className = 'acw_right';
 
-        autoCompleteWidget.appendChild(leftContainer);
-        autoCompleteWidget.appendChild(rightContainer);
+        this.acwObject.appendChild(leftContainer);
+        this.acwObject.appendChild(rightContainer);
 
         //Create Image Thumbnail element, then assign attributes.
         let imageElem = document.createElement('img');
@@ -64,12 +68,12 @@ document.addEventListener('DOMContentLoaded', () => {
         imageElem.title = '';
 
         //Append the image to the Left Container.
-        document.querySelector(ID + '.acw_left').appendChild(imageElem);
+        this.acwObject.getElementsByClassName('acw_left')[0].appendChild(imageElem);
 
         //Create Table for results, then assign attributes
         const productTableElem = document.createElement('table'),
             tableElem = document.createElement('table');
-            acw_right = document.querySelector(ID + '.acw_right');
+            acw_right = this.acwObject.getElementsByClassName('acw_right')[0];
 
         productTableElem.className = 'productData';
         tableElem.className = 'alcoholDisplay';
@@ -78,17 +82,17 @@ document.addEventListener('DOMContentLoaded', () => {
         acw_right.appendChild(productTableElem);
         acw_right.appendChild(tableElem);
 
-        this.declare(ID);
+        this.declare();
       };
 
-      this.declare = (ID) => {
-        const alcoholInput = document.querySelector(ID + '.lcboAutoCompleteInput'),
-              alcoholImg = document.querySelector(ID + 'img'),
-              alcoholTable = document.querySelector(ID + '.alcoholDisplay'),
-              alcoholProductTable = document.querySelector(ID + '.productData'),
+      this.declare = () => {
+        const alcoholInput = this.acwObject.getElementsByClassName('lcboAutoCompleteInput')[0],
+              alcoholImg = this.acwObject.getElementsByTagName('img')[0],
+              alcoholTable = this.acwObject.getElementsByClassName('alcoholDisplay')[0],
+              alcoholProductTable = this.acwObject.getElementsByClassName('productData')[0],
               url = 'http://lcboapi.com/products?access_key=' + this.access_key + '&q=';
 
-        const autocompleteList = document.querySelector(ID + '.lcboAutoComplete');
+        const autocompleteList = this.acwObject.getElementsByClassName('lcboAutoComplete')[0];
 
         //Listen for any text or option selection input.
         alcoholInput.addEventListener('keyup', (e) => {
@@ -132,12 +136,13 @@ document.addEventListener('DOMContentLoaded', () => {
           this.autoCompleteResults = result;
 
           //Create Options tags for the Datalist and then insert it into the DOM.
-          for(let i = 0; i < this.autoCompleteResults.length; i++) {
-            options += '<li data-package="' + this.autoCompleteResults[i].package
-                    + '" data-id="' + this.autoCompleteResults[i].id
-                    + '" value="' + this.autoCompleteResults[i].name
-                    + '" tabindex=1>' + this.autoCompleteResults[i].name + ' ' + this.autoCompleteResults[i].package + '</li>';
-          }
+          this.autoCompleteResults.forEach((obj, i) => {
+            options += '<li data-package="' + obj.package
+                    + '" data-id="' + obj.id
+                    + '" value="' + obj.name
+                    + '" tabindex=1>' + obj.name + ' ' + obj.package + '</li>';
+          })
+
           autocompleteList.innerHTML = options;
 
           //When an element is clicked, send out the data to be rendered on the screen and clear the searchr results.
@@ -148,8 +153,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             const first = autocompleteList.firstChild,
-                last = autocompleteList.lastChild,
-                mainInput = document.querySelector(ID + 'input[type="search"]');
+                  last = autocompleteList.lastChild,
+                  mainInput = this.searchInput;
 
             document.onkeydown = function(e) {
               //Temporarily deactivates the Arrow keys and Space Bar.
@@ -205,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if(this.selectedAlcoholObject.getAttribute('data-id') == this.currentSelectedProduct) return;
 
           this.showLoader();
-          this.hideACWData(ID);
+          this.hideACWData();
 
           //Get Stores Info for Product
           let url = 'http://lcboapi.com/products/' + this.selectedAlcoholObject.getAttribute('data-id') + '/inventory?access_key=' + this.access_key;
@@ -315,13 +320,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
               })
 
-              document.querySelector(ID + '.pagination').appendChild(paginationButton);
+              this.acwObject.getElementsByClassName('pagination')[0].appendChild(paginationButton);
             }
           }
 
           setTimeout(() => {
             this.hideLoader();
-            this.showACWData(ID);
+            this.showACWData();
           }, 1000);
         }
       }
@@ -355,21 +360,21 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       //Show and Hide ACW data
-      this.showACWData = (ID) => {
-        document.querySelector(ID + '.acw_left').style.opacity = '1';
-        document.querySelector(ID + '.acw_right').style.opacity = '1';
+      this.showACWData = () => {
+        this.acwObject.getElementsByClassName('acw_left')[0].style.opacity = '1';
+        this.acwObject.getElementsByClassName('acw_right')[0].style.opacity = '1';
       }
-      this.hideACWData = (ID) => {
-        document.querySelector(ID + '.acw_left').style.opacity = '0';
-        document.querySelector(ID + '.acw_right').style.opacity = '0';
+      this.hideACWData = () => {
+        this.acwObject.getElementsByClassName('acw_left')[0].style.opacity = '0';
+        this.acwObject.getElementsByClassName('acw_right')[0].style.opacity = '0';
       }
 
       //Show and Hide Load Spinner
       this.showLoader = () => {
-        document.querySelector('.loader').style.opacity = '1';
+        this.loader.style.opacity = '1';
       }
       this.hideLoader = () => {
-        document.querySelector('.loader').style.opacity = '0';
+        this.loader.style.opacity = '0';
       }
 
       //Begin instantiaion process.
