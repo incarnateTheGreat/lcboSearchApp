@@ -213,8 +213,8 @@ document.addEventListener('DOMContentLoaded', () => {
           this.hideACWData();
 
           //Get Stores Info for Product
-          let url = 'http://lcboapi.com/products/' + this.selectedAlcoholObject.getAttribute('data-id') + '/inventory?access_key=' + this.access_key;
-          const request = new Request(url);
+          const url = 'http://lcboapi.com/products/' + this.selectedAlcoholObject.getAttribute('data-id') + '/inventory?access_key=' + this.access_key,
+                request = new Request(url);
 
           //On request, collect the JSON data, deliver it, and then populate the AutoComplete system.
           fetch(request)
@@ -261,6 +261,11 @@ document.addEventListener('DOMContentLoaded', () => {
           //   // names must be equal
           //   return 0;
           // });
+
+          productTable += '<tr>';
+            productTable += '<td>Price</td>';
+            productTable += '<td class="quantity">$' + (selectedAlcoholObject['price_in_cents'] / 100).toFixed(2) + '</td>';
+          productTable += '</tr>';
 
           if(selectedAlcoholObject !== null) {
             for(let z in productStoreData) {
