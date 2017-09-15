@@ -275,6 +275,17 @@ document.addEventListener('DOMContentLoaded', () => {
               productTable += '</tr>'
             }
 
+            if(window.Worker) {
+              let myWorker = new Worker('/scripts/worker.js');
+              let message = { name: selectedAlcoholObject['name'], price: (selectedAlcoholObject['price_in_cents'] / 100).toFixed(2) };
+
+              myWorker.postMessage(message)
+
+              myWorker.onmessage = function(e) {
+                console.log(e.data.result)
+              }
+            }
+
             //Build the Seleced Alcohol JSON Data Table and insert it into the DOM.
             table += '<tr><th>Product JSON Data</th></tr>';
 
@@ -387,4 +398,58 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const acw = new lcboAutoCompleteObject();
+
+    // //base class
+    // let Job = function() {
+    //   this.pays = true;
+    // }
+    // Job.prototype.print = function() {
+    //   console.log(this.pays ? 'Please hire me.' : 'Neh.');
+    // }
+    //
+    // //sub class
+    // let TechJob = function(title, pays) {
+    //   this.title = title;
+    //   this.pays = pays;
+    // }
+    // TechJob.prototype.personInfo = function() {
+    //   console.log('Title:', this.title, ' / Pays?:', this.pays);
+    // }
+    //
+    // let obj = [];
+    //
+    // for(let i = 1; i < 10; i++) {
+    //   obj.push(new TechJob('Garry ' + i, true))
+    // }
+    //
+    // // obj[8].personInfo();
+    //
+    // // console.dir(obj[8]);
+    //
+    // var add = (function () {
+    //     var counter = 0;
+    //     return function () {return counter += 1;}
+    // })();
+    //
+    // // console.log(add());
+    // // console.log(add());
+    // // console.log(add());
+    // console.dir(add);
+    // add();
+    // // console.dir(add);
+    // add();
+    // // console.dir(add);
+    // add();
+    //
+    // function makeAdder(x) {
+    //   return function(y) {
+    //     return x + y;
+    //   };
+    // }
+    //
+    // var add5 = makeAdder(5);
+    // var add10 = makeAdder(10);
+    //
+    // console.log(add5(2));  // 7
+    // console.log(add10(2)); // 12
 });
